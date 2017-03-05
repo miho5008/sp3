@@ -1,0 +1,88 @@
+﻿@* Remove this section if you are using bundling *@
+@section Scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+}
+
+@{
+    Layout = "~/_SiteLayout.cshtml";
+    Page.Title = "Log in";
+
+    // Initialize general page variables
+    var userid = "";
+    var password = "";
+    var rememberMe = false;
+
+    // Setup validation
+    Validation.RequireField("userid", "You must specify an user id.");
+    Validation.RequireField("password", "You must specify a password.");
+    Validation.Add("password",
+        Validator.StringLength(
+            maxLength: Int32.MaxValue,
+            minLength: 6,
+            errorMessage: "Password must be at least 6 characters"));
+
+    // If this is a POST request, validate and process data
+    if (IsPost) {
+        AntiForgery.Validate();
+        if (Validation.IsValid()) {
+            userid = Request.Form["userid"];
+            password = Request.Form["password"];
+
+            if (WebSecurity.UserExists(userid) 
+                && WebSecurity.GetPasswordFailuresSinceLastSuccess(userid) > 4 
+                && WebSecurity.GetLastPasswordFailureDate(userid).AddSeconds(60) > DateTime.UtcNow) {
+                Response.Redirect("~/Account/AccountLockedOut");
+                return;
+            }
+
+            // Attempt to log in using provided credentials
+            if (WebSecurity.Login(userid, password, rememberMe)) {
+                // redirects to users role page
+                String redirectPage = "";
+                try{
+                    redirectPage = Roles.GetRolesForUser(userid)[0];    
+                } catch(Exception e){
+                    
+                }
+                
+                Context.RedirectLocal("~/"+redirectPage);
+                return;
+            } else {
+                ModelState.AddFormError("The user name or password provided is incorrect.");
+            }
+        }
+    }
+}
+
+<hgroup class="title">
+    <h1>@Page.Title.</h1>
+</hgroup>
+
+<section id="loginForm">
+    <form method="post">
+        @AntiForgery.GetHtml()
+        @* If one or more validation errors exist, show an error *@
+        @Html.ValidationSummary("Log in was unsuccessful. Please correct the errors and try again.", excludeFieldErrors: true, htmlAttributes: null)
+
+        <fieldset>
+            <legend>Log in to Your Account</legend>
+            <ol>
+                <li class="userid">
+                    <label for="userid" @if (!ModelState.IsValidField("userid"))
+                                       {<text>class="error-label"</text>}>user id</label>
+                    <input type="text" id="userid" name="userid" value="@userid" @Validation.For("userid")/>
+                    @* Write any user name validation errors to the page *@
+                    @Html.ValidationMessage("userid")
+                </li>
+                <li class="password">
+                    <label for="password" @if (!ModelState.IsValidField("password")) {<text>class="error-label"</text>}>Password</label>
+                    <input type="password" id="password" name="password" @Validation.For("password")/>
+                    @* Write any password validation errors to the page *@
+                    @Html.ValidationMessage("password")
+                </li>
+            </ol>
+            <input type="submit" value="Log in" />
+        </fieldset>
+    </form>
+</section>
