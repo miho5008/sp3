@@ -52,6 +52,15 @@
                     </section>
                     <nav>
                         <ul id="menu">
+                             @{
+                                // add link to every role page of current user
+                                if(WebSecurity.IsAuthenticated){
+                                    foreach(String role in Roles.GetRolesForUser()){
+                                        String linkref=""+role;
+                                        <li><a href=@linkref>@role</a></li>
+                                    }
+                                }   
+                             }
                             <li><a href="~/">Home</a></li>
                         </ul>
                     </nav>
