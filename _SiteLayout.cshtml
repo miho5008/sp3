@@ -27,7 +27,18 @@
                     <section id="login">
                         @if (WebSecurity.IsAuthenticated) {
                             <text>
-                                Hello, <a class="email" href="~/Account/Manage" title="Manage">@WebSecurity.CurrentUserName</a>!
+                                @{
+                                    var data = Database.Open("sp3").QuerySingle(
+                                        "SELECT ui.firstname, r.rolename"
+                                        +" FROM userinfo AS ui"
+                                        +" JOIN webpages_UsersInRoles AS uir"
+                                        +" ON uir.userid=ui.userid"
+                                        +" JOIN webpages_roles AS r"
+                                        +" ON uir.roleid=r.roleid"
+                                        +" WHERE ui.userid=(@0)", WebSecurity.CurrentUserId);
+
+                                }
+                                <span>@data.firstname (@data.rolename)</span>
                                 <form id="logoutForm" action="~/Account/Logout" method="post">
                                     @AntiForgery.GetHtml()
                                     <a href="javascript:document.getElementById('logoutForm').submit()">Log out</a>
