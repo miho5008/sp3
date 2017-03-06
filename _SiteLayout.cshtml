@@ -56,8 +56,7 @@
                                 // add link to every role page of current user
                                 if(WebSecurity.IsAuthenticated){
                                     foreach(String role in Roles.GetRolesForUser()){
-                                        String linkref=""+role;
-                                        <li><a href=@linkref>@role</a></li>
+                                        <li><a href="~/@role">@role</a></li>
                                     }
                                 }   
                              }
