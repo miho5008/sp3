@@ -9,6 +9,8 @@
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Company";
 
+    String searchval = Request["search_val"];
+    String regex_validsearch = "[0-9]+";
 }
 
 
@@ -18,6 +20,16 @@
         <p>company</p>
        
     }
+    <form method="post">
+        <label for="search_val" @if (!ModelState.IsValidField("password")) 
+            {<text>class="error-label"</text>}>search employee number</label>
+        <input type="text" id="search_val" 
+            name="search_val" value="@searchval" 
+            @Validation.For("search_val") />
+        
+        <input type="submit" value="search" />
+        @Html.ValidationMessage("search_val")
+    </form>
 
 </div>
 
