@@ -12,34 +12,30 @@
 <div>
     <h1>employee page</h1>
     @{
-        
-        if(Request["reg"] == "self")
-        {
-            <h2>register non-attendance</h2>
-            <form id="register_self">
-                <label for="datepicker">date</label>
-                <input type="text" id="datepicker">
-                <input type="submit" value="register"/>
-            </form>    
-        } 
-        else if(Request["reg"] == "child")
-        {
-            <h2>register non-attendance due to sick child</h2>
-            <form id="register_child">
-                <label for="input_childnr" >child pnr</label>
-                <input id="input_childnr"type ="text" name="childpnr" />
-                <input type="submit" value="register"/>
-            </form>
-            
-        }
-        else
-        {
-            // display choice menu of register types
-            <form action="~/Employee">
-                <button id="btn_self" name="reg" value="self">register self</button>
-                <button id="btn_child" name="reg" value="child">register child</button>
-
-            </form>
+        switch(Request["regtype"]){
+            case "self":
+                <h2>register non-attendance</h2>
+                <form id="register_self" method="post">
+                    <label for="datepicker">date</label>
+                    <input type="text" id="datepicker" name="regval_stopdate"/>
+                    <button name="regsubmit" value="self">register</button>
+                </form>    
+                break;
+            case "child":
+                <h2>register non-attendance due to sick child</h2>
+                <form id="register_child" method="post">
+                    <label for="input_childnr" >child pnr</label>
+                    <input id="input_childnr"type ="text" name="regval_childpnr" />
+                    <button name="regsubmit" value="child">register</button>
+                </form>
+                break;
+            default:
+                // display choice menu of register types
+                <form action="~/Employee">
+                    <button id="btn_self" name="regtype" value="self">register self</button>
+                    <button id="btn_child" name="regtype" value="child">register child</button>
+                </form>
+                break;
         }
     }
 
