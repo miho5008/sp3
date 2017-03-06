@@ -69,6 +69,7 @@
                     Context.RedirectLocal("~/");
 
                 } else {
+                    // input was incorrect
                     <p class="error">Invalid input, could not register</p>
                 }
                 
@@ -80,6 +81,7 @@
 <div>
     <h1>employee page</h1>
     @{
+        // setup input validations
         Validation.RequireField("regval_childnr", "You must specify a value.");
         Validation.Add("regval_childnr",
             Validator.Regex("[0-9]+",
@@ -90,6 +92,7 @@
             Validator.Regex("[0-9]{2}/[0-9]{2}/[0-9]{4}",
             errorMessage:"Input must be format DD/MM/YYYY"));
 
+        // forms
         switch(Request["regtype"]){
             case "self":
                 <h2>register non-attendance</h2>
