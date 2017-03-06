@@ -56,21 +56,25 @@
     <form method="post">
         @AntiForgery.GetHtml()
         @* If one or more validation errors exist, show an error *@
-        @Html.ValidationSummary("Log in was unsuccessful. Please correct the errors and try again.", excludeFieldErrors: true, htmlAttributes: null)
+        @Html.ValidationSummary("Log in was unsuccessful. Please correct the errors and try again.",
+             excludeFieldErrors: true, htmlAttributes: null)
 
         <fieldset>
             <legend>Log in to Your Account</legend>
             <ol>
                 <li class="userid">
                     <label for="userid" @if (!ModelState.IsValidField("userid"))
-                                       {<text>class="error-label"</text>}>user id</label>
-                    <input type="text" id="userid" name="userid" value="@userid" @Validation.For("userid")/>
+                        {<text>class="error-label"</text>}>user id</label>
+                    <input type="text" id="userid" name="userid" value="@userid"
+                        @Validation.For("userid") autofocus="true" />
                     @* Write any user name validation errors to the page *@
                     @Html.ValidationMessage("userid")
                 </li>
                 <li class="password">
-                    <label for="password" @if (!ModelState.IsValidField("password")) {<text>class="error-label"</text>}>Password</label>
-                    <input type="password" id="password" name="password" @Validation.For("password")/>
+                    <label for="password" @if (!ModelState.IsValidField("password")) 
+                        {<text>class="error-label"</text>}>Password</label>
+                    <input type="password" id="password" name="password" 
+                        @Validation.For("password")/>
                     @* Write any password validation errors to the page *@
                     @Html.ValidationMessage("password")
                 </li>
