@@ -1,7 +1,11 @@
 ﻿
 @{
-    WebSecurity.RequireRoles("company");
     WebSecurity.RequireAuthenticatedUser();
+    if(!Roles.GetRolesForUser(WebSecurity.CurrentUserId.ToString()).Contains("company")){
+        Response.Redirect("~/");
+    }
+    WebSecurity.RequireRoles("company");
+
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Company";
 
