@@ -26,6 +26,7 @@
                 <div class="float-right">
                     <section id="login">
                         @if (WebSecurity.IsAuthenticated) {
+                            // user 'log out' panel
                             <text>
                                 @{
                                     var data = Database.Open("sp3").QuerySingle(
@@ -46,6 +47,7 @@
                                 </form>
                             </text>
                         } else {
+                            // user 'log in' panel
                             <ul>
                                 <li><a href="~/Account/Login">Log in</a></li>
                             </ul>
