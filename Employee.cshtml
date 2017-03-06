@@ -22,17 +22,30 @@
         switch(Request["regsubmit"]){
             case "self":
                 String stopdate = Request["regval_stopdate"];
-                Database.Open("sp3").Query(
-                    "INSERT INTO registrations"
-                    +" (userid, ipaddress, action, time, stoptime)"
-                    +" VALUES"
-                    +" (@0, @1, 2, (@2), (@3))", 
-                    new String[]{
-                        WebSecurity.CurrentUserId.ToString(),
-                        Request.UserHostAddress.ToString(),
-                        DateTime.Now.ToString(),
-                        stopdate}
-                );
+                String regexPattern_date = "([0-2][0-9]|3[0-1])/(0[0-9]|1[0-2])/2[0-9]{3}";
+
+                // validate input
+                if(System.Text.RegularExpressions.Regex.IsMatch(stopdate, regexPattern_date)){
+                    <p>registration successful</p>
+
+                    Database.Open("sp3").Query(
+                        "INSERT INTO registrations"
+                        +" (userid, ipaddress, action, time, stoptime)"
+                        +" VALUES"
+                        +" (@0, @1, 2, (@2), (@3))", 
+                        new String[]{
+                            WebSecurity.CurrentUserId.ToString(),
+                            Request.UserHostAddress.ToString(),
+                            DateTime.Now.ToString(),
+                            stopdate}
+                    );
+
+                    Context.RedirectLocal("~/");
+
+                } else {
+                    // input was incorrect
+                    <p class="error">Invalid input, could not register<br>use format DD/MM/YYYY</p>
+                }
                 break;
             case "child":
                 String childpnr = Request["regval_childpnr"];
@@ -72,13 +85,20 @@
             Validator.Regex("[0-9]+",
             errorMessage: "Input must be integers"));
 
+        Validation.RequireField("regval_stopdate", "You must specify a date");
+        Validation.Add("regval_stopdate",
+            Validator.Regex("[0-9]{2}/[0-9]{2}/[0-9]{4}",
+            errorMessage:"Input must be format DD/MM/YYYY"));
+
         switch(Request["regtype"]){
             case "self":
                 <h2>register non-attendance</h2>
                 <form id="register_self" method="post">
                     <label for="datepicker">date - (MM/DD/YYYY)</label>
-                    <input type="text" id="datepicker" name="regval_stopdate"/>
+                    <input type="text" id="datepicker" name="regval_stopdate"
+                            @Validation.For("regval_stopdate") />
                     <button name="regsubmit" value="self">register</button>
+                     @Html.ValidationMessage("regval_stopdate")
                 </form>    
                 break;
             case "child":
