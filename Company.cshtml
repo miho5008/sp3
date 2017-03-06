@@ -43,8 +43,8 @@
 <div id="search_result">
     @{
        // if valid search request was made
-        if( Request["search_val"] != "" ){ 
             Validation.Validate();
+        if(Request["search_val"] != "" ){ 
             searchval = Request["search_val"];
 
             if(searchval != null
