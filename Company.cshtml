@@ -56,6 +56,9 @@
                         +" FROM userinfo AS ui"
                         +" WHERE ui.userid=(@0)",
                         searchval);
+                    if(employee == null){
+                        throw new NullReferenceException("could not find user "+searchval);
+                    }
                     // get the employees register rows
                     var data = db.Query(
                         "SELECT a.name, reg.ipaddress,"
@@ -72,10 +75,15 @@
 
                     // display the result
                     <h3>displaying result for [@employee.lastname, @employee.firstname]</h3>
-                    @grid.GetHtml();
-
+                    if(grid.TotalRowCount > 0){
+                        @grid.GetHtml();    
+                    } else {
+                        <p>no entries found</p>
+                    }
                 } catch(FormatException e){
-                    <p>@e.Message</p>
+                    <p class="error">@e.Message</p>
+                } catch(NullReferenceException e){
+                    <p class="error">@e.Message</p>
                 }
             }
         }
