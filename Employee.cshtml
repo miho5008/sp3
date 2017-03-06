@@ -1,4 +1,8 @@
-﻿@{
+﻿@section Scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+}
+@{
     WebSecurity.RequireAuthenticatedUser();
     if(!Roles.GetRolesForUser(WebSecurity.CurrentUserId.ToString()).Contains("employee")){
         Response.Redirect("~/");
@@ -7,6 +11,8 @@
     
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Employee Page";
+
+    String forminput_childpnr = Request["regval_childpnr"];
 }
 
 @{
@@ -30,26 +36,42 @@
                 break;
             case "child":
                 String childpnr = Request["regval_childpnr"];
-                Database.Open("sp3").Query(
-                    "INSERT INTO registrations"
-                    +" (userid, ipaddress, action, time, childpnr)"
-                    +" VALUES"
-                    +" (@0, @1, 1, (@2), (@3))", 
-                    new String[]{
-                        WebSecurity.CurrentUserId.ToString(),
-                        Request.UserHostAddress.ToString(),
-                        DateTime.Now.ToString(),
-                        childpnr}
-                );
-            break;
+                String regexPattern_pnr = "(19|20)[0-9]{2}(0[1-9]([0-2][0-9]|3[0-1])|1[0-2]([0-2][0-9]|3[0-1]))[0-9]{4}";
+
+                // validate input
+                if(System.Text.RegularExpressions.Regex.IsMatch(childpnr, regexPattern_pnr)){
+                    <p>registration successful</p>
+                    
+                    Database.Open("sp3").Query(
+                        "INSERT INTO registrations"
+                        +" (userid, ipaddress, action, time, childpnr)"
+                        +" VALUES"
+                        +" (@0, @1, 1, (@2), (@3))", 
+                        new String[]{
+                            WebSecurity.CurrentUserId.ToString(),
+                            Request.UserHostAddress.ToString(),
+                            DateTime.Now.ToString(),
+                            childpnr});
+                    
+                    Context.RedirectLocal("~/");
+
+                } else {
+                    <p class="error">Invalid input, could not register</p>
+                }
+                
+                break;
         }
-        
     } 
 }
 
 <div>
     <h1>employee page</h1>
     @{
+        Validation.RequireField("regval_childnr", "You must specify a value.");
+        Validation.Add("regval_childnr",
+            Validator.Regex("[0-9]+",
+            errorMessage: "Input must be integers"));
+
         switch(Request["regtype"]){
             case "self":
                 <h2>register non-attendance</h2>
@@ -62,9 +84,13 @@
             case "child":
                 <h2>register non-attendance due to sick child</h2>
                 <form id="register_child" method="post">
-                    <label for="input_childnr" >child pnr</label>
-                    <input id="input_childnr"type ="text" name="regval_childpnr" />
-                    <button name="regsubmit" value="child">register</button>
+                    <label for="input_childpnr" @if (!ModelState.IsValidField("regval_childpnr")) 
+                        {<text>class="error-label"</text>}>child pnr YYYYMMDDXXXX</label>
+                    <input type="text" id="input_childpnr" 
+                        name="regval_childpnr"  
+                        @Validation.For("regval_childnr") />
+                    <button name="regsubmit" value="child" >register</button>
+                    @Html.ValidationMessage("regval_childpnr")
                 </form>
                 break;
             default:
@@ -75,6 +101,7 @@
                 </form>
                 break;
         }
+
     }
 
 </div>
