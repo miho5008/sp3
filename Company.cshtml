@@ -1,4 +1,7 @@
-﻿
+﻿@section Scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+}
 @{
     WebSecurity.RequireAuthenticatedUser();
     if(!Roles.GetRolesForUser(WebSecurity.CurrentUserId.ToString()).Contains("company")){
@@ -19,6 +22,12 @@
         
         <p>company</p>
        
+        // Setup validation
+        Validation.RequireField("search_val", "You must specify a search value.");
+        Validation.Add("search_val",
+            Validator.Regex("[0-9]+",
+            errorMessage: "Input must be integers"));
+   
     }
     <form method="post">
         <label for="search_val" @if (!ModelState.IsValidField("password")) 
