@@ -1,6 +1,9 @@
 ﻿
 @{
     WebSecurity.RequireAuthenticatedUser();
+    if(!Roles.GetRolesForUser(WebSecurity.CurrentUserId.ToString()).Contains("employee")){
+        Response.Redirect("~/");
+    }
     WebSecurity.RequireRoles("employee");
     
     Layout = "~/_SiteLayout.cshtml";
