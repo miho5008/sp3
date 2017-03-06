@@ -41,7 +41,8 @@
                                 <span>@data.firstname (@data.rolename)</span>
                                 <form id="logoutForm" action="~/Account/Logout" method="post">
                                     @AntiForgery.GetHtml()
-                                    <a href="javascript:document.getElementById('logoutForm').submit()">Log out</a>
+                                    <a href="javascript:document.getElementById('logoutForm').submit()"
+                                       onclick="if(!confirm('confirm log out')){return false;}">Log out</a>
                                 </form>
                             </text>
                         } else {
