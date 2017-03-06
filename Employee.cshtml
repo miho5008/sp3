@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     WebSecurity.RequireAuthenticatedUser();
     if(!Roles.GetRolesForUser(WebSecurity.CurrentUserId.ToString()).Contains("employee")){
         Response.Redirect("~/");
