@@ -99,6 +99,8 @@
                 <form id="register_self" method="post">
                     <label for="datepicker">date - (MM/DD/YYYY)</label>
                     <input type="text" id="datepicker" name="regval_stopdate"
+                           value="@forminput_stopdate"
+                           readonly="true"
                             @Validation.For("regval_stopdate") />
                     <button name="regsubmit" value="self">register</button>
                      @Html.ValidationMessage("regval_stopdate")
