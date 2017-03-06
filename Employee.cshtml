@@ -9,6 +9,44 @@
     Page.Title = "Employee Page";
 }
 
+@{
+    // registration submission
+    if(IsPost){
+        
+        switch(Request["regsubmit"]){
+            case "self":
+                String stopdate = Request["regval_stopdate"];
+                Database.Open("sp3").Query(
+                    "INSERT INTO registrations"
+                    +" (userid, ipaddress, action, time, stoptime)"
+                    +" VALUES"
+                    +" (@0, @1, 2, (@2), (@3))", 
+                    new String[]{
+                        WebSecurity.CurrentUserId.ToString(),
+                        Request.UserHostAddress.ToString(),
+                        DateTime.Now.ToString(),
+                        stopdate}
+                );
+                break;
+            case "child":
+                String childpnr = Request["regval_childpnr"];
+                Database.Open("sp3").Query(
+                    "INSERT INTO registrations"
+                    +" (userid, ipaddress, action, time, childpnr)"
+                    +" VALUES"
+                    +" (@0, @1, 1, (@2), (@3))", 
+                    new String[]{
+                        WebSecurity.CurrentUserId.ToString(),
+                        Request.UserHostAddress.ToString(),
+                        DateTime.Now.ToString(),
+                        childpnr}
+                );
+            break;
+        }
+        
+    } 
+}
+
 <div>
     <h1>employee page</h1>
     @{
