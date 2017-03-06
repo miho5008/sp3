@@ -38,15 +38,8 @@
 
             // Attempt to log in using provided credentials
             if (WebSecurity.Login(userid, password, rememberMe)) {
-                // redirects to users role page
-                String redirectPage = "";
-                try{
-                    redirectPage = Roles.GetRolesForUser(userid)[0];    
-                } catch(Exception e){
-                    
-                }
-                
-                Context.RedirectLocal("~/"+redirectPage);
+                // redirect to home page
+                Context.RedirectLocal("~/");
                 return;
             } else {
                 ModelState.AddFormError("The user name or password provided is incorrect.");
