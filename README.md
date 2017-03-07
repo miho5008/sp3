@@ -10,7 +10,8 @@ http://mikepope.com/blog/DisplayBlog.aspx?permalink=2240
 * 2/mypass
 
 ## todo
-* datetime validation 
+* datetime validation: pnr 
+* datetime validation: chronologic validation
 * display registrations result to user
 * user reorganize searchresult headers reset search
-
+* ip addresses?
