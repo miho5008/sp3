@@ -89,6 +89,9 @@
         Validation.Add("regval_childnr",
             Validator.Regex("[0-9]+",
             errorMessage: "Input must be integers"));
+        Validation.Add("regval_childnr",
+            Validator.Range(0, 201703129999,
+            errorMessage: "Input must be a valid pnr"));
 
         Validation.RequireField("regval_stopdate", "You must specify a date");
         Validation.Add("regval_stopdate",
