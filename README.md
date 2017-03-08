@@ -12,6 +12,6 @@ http://mikepope.com/blog/DisplayBlog.aspx?permalink=2240
 ## todo
 * datetime validation: pnr 
 * datetime validation: chronologic validation
-* display registrations result to user
+* display registrations result to user - all registrations is now showing, should maybe only be the most recent one?
 * user reorganize searchresult headers reset search
 * ip addresses?
