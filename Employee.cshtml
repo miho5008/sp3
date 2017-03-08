@@ -69,7 +69,43 @@
                             DateTime.Now.ToString(),
                             childpnr});
                     
-                    Context.RedirectLocal("~/");
+                    var db = Database.Open("sp3");
+
+                    String currentuser = WebSecurity.CurrentUserId.ToString();
+
+                    //get the current user
+                    var employee = db.QuerySingle(
+                        "SELECT * "
+                        +" FROM userinfo AS ui"
+                        +" WHERE ui.userid=(@0)",
+                        currentuser);
+                    if(employee == null){
+                        throw new NullReferenceException("could not find user "+currentuser);
+                    }
+                    
+                    // get the employees registration from database
+                    var data = db.Query(
+                        "SELECT a.name, reg.ipaddress,"
+                        +"   reg.time, reg.stoptime, reg.childpnr"
+                        +" FROM registrations AS reg"
+                        +" JOIN actions AS a"
+                        +"  ON reg.action=a.id"
+                        +" WHERE reg.userid=(@0)"
+                        +" ORDER BY reg.time DESC",
+                        currentuser
+                    );
+                    
+                    var grid = new WebGrid(data);
+
+                    // display the registration to the employee
+                    <h3>displaying result for [@employee.lastname, @employee.firstname]</h3>
+                    if(grid.TotalRowCount > 0){
+                        @grid.GetHtml();    
+                    } else {
+                        <p>no entries found</p>
+                    }
+
+                    //Context.RedirectLocal("~/");
 
                 } else {
                     // input was incorrect
