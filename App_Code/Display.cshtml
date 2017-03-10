@@ -1,0 +1,53 @@
+﻿@helper Employee(String userid) {
+
+    String regex_validsearch = "[0-9]+";
+
+    // if valid search request was made
+    if(userid == null || 
+        userid == "" ||
+        !System.Text.RegularExpressions.Regex.IsMatch(userid, regex_validsearch)){ 
+            return;
+    }
+            
+    try{
+        var db = Database.Open("sp3");
+        //get the requested employee
+        var employee = db.QuerySingle(
+            "SELECT * "
+            +" FROM userinfo AS ui"
+            +" WHERE ui.userid=(@0)",
+            userid);
+        if(employee == null){
+            throw new NullReferenceException("could not find user "+userid);
+        }
+        // get the employees register rows
+        var data = db.Query(
+            "SELECT a.name, reg.ipaddress,"
+            +"   reg.time, reg.stoptime, reg.childpnr"
+            +" FROM registrations AS reg"
+            +" JOIN actions AS a"
+            +"  ON reg.action=a.id"
+            +" WHERE reg.userid=(@0)"
+            +" ORDER BY reg.time DESC",
+            userid
+        );
+
+        var grid = new WebGrid(data);
+
+        // display the result
+        <h3>displaying result for [@employee.lastname, @employee.firstname]</h3>
+        if(grid.TotalRowCount > 0){
+            @grid.GetHtml();    
+        } else {
+            <p>no entries found</p>
+        }
+    } catch(FormatException e){
+        <p class="error">@e.Message</p>
+    } catch(NullReferenceException e){
+        <p class="error">@e.Message</p>
+    }
+    
+    
+    
+}
+
