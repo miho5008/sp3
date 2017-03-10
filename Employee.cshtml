@@ -32,7 +32,6 @@
                 
                 // validate input
                 if(System.Text.RegularExpressions.Regex.IsMatch(stopdate, regexPattern_date)){
-                    <p>registration successful</p>
 
                     Database.Open("sp3").Query(
                         "INSERT INTO registrations"
@@ -46,6 +45,7 @@
                             stopdate}
                     );
                     
+                    <p>registration successful</p>
                     @Display.Employee(WebSecurity.CurrentUserId.ToString())
 
                 } else {
