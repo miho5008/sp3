@@ -60,8 +60,6 @@
 
                 // validate input
                 if(System.Text.RegularExpressions.Regex.IsMatch(childpnr, regexPattern_pnr)){
-                    <p>registration successful</p>
-                    
                     Database.Open("sp3").Query(
                         "INSERT INTO registrations"
                         +" (userid, ipaddress, action, time, childpnr)"
@@ -74,6 +72,7 @@
                             childpnr});
 
                     //Context.RedirectLocal("~/");
+                    <p>registration successful</p>
                     @Display.Employee(WebSecurity.CurrentUserId.ToString())
 
                 } else {
