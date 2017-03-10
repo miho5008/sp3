@@ -64,7 +64,7 @@
                 break;
             case "child":
                 // validate input
-                if(System.Text.RegularExpressions.Regex.IsMatch(childpnr, regexPattern_pnr)){
+                if(System.Text.RegularExpressions.Regex.IsMatch(forminput_childpnr, regexPattern_pnr)){
                     Database.Open("sp3").Query(
                         "INSERT INTO registrations"
                         +" (userid, ipaddress, action, time, childpnr)"
