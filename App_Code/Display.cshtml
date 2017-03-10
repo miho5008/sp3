@@ -4,7 +4,6 @@
 
     // if valid search request was made
     if(userid == null || 
-        userid == "" ||
         !System.Text.RegularExpressions.Regex.IsMatch(userid, regex_validsearch)){ 
             return;
     }
