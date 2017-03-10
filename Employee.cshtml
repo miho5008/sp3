@@ -12,8 +12,19 @@
     Layout = "~/_SiteLayout.cshtml";
     Page.Title = "Employee Page";
 
-    String forminput_childpnr = Request["regval_childpnr"];
-    String forminput_stopdate = Request["regval_stopdate"];
+    String forminput_childpnr="";
+    String forminput_stopdate="";
+    try{
+        forminput_childpnr = Request["regval_childpnr"];
+        forminput_stopdate = Request["regval_stopdate"];
+    } catch(System.Web.HttpRequestValidationException e){
+        <p class="error">Illegal input</p>
+        return;
+    } catch(Exception e){
+        <p class="error">e.Message</p>
+
+    }
+    
     // pattern: YYYY/MM/DD
     String regexPattern_date = "2[0-9]{3}/(0[1-9]|1[0-2])/([0-2][0-9]|3[0-1])";
     // pattern: YYYYMMDDXXXX
@@ -28,10 +39,8 @@
         
         switch(Request["regsubmit"]){
             case "self":
-                String stopdate = Request["regval_stopdate"];
-                
                 // validate input
-                if(System.Text.RegularExpressions.Regex.IsMatch(stopdate, regexPattern_date)){
+                if(System.Text.RegularExpressions.Regex.IsMatch(forminput_stopdate, regexPattern_date)){
 
                     Database.Open("sp3").Query(
                         "INSERT INTO registrations"
@@ -42,7 +51,7 @@
                             WebSecurity.CurrentUserId.ToString(),
                             Request.UserHostAddress.ToString(),
                             DateTime.Now.ToString(),
-                            stopdate}
+                            forminput_stopdate}
                     );
                     
                     <p>registration successful</p>
@@ -54,8 +63,6 @@
                 }
                 break;
             case "child":
-                String childpnr = Request["regval_childpnr"];
-
                 // validate input
                 if(System.Text.RegularExpressions.Regex.IsMatch(childpnr, regexPattern_pnr)){
                     Database.Open("sp3").Query(
@@ -67,7 +74,7 @@
                             WebSecurity.CurrentUserId.ToString(),
                             Request.UserHostAddress.ToString(),
                             DateTime.Now.ToString(),
-                            childpnr});
+                            forminput_childpnr});
 
                     <p>registration successful</p>
                     @Display.Employee(WebSecurity.CurrentUserId.ToString())
