@@ -111,7 +111,7 @@
                 <h2>register non-attendance due to sick child</h2>
                 <form id="register_child" method="post">
                     <label for="input_childpnr" @if (!ModelState.IsValidField("regval_childpnr")) 
-                        {<text>class="error-label"</text>}>child pnr YYYYMMDDXXXX</label>
+                        {<text>class="error"</text>}>child pnr YYYYMMDDXXXX</label>
                     <input type="text" id="input_childpnr" 
                         name="regval_childpnr"  
                         @Validation.For("regval_childnr") />
