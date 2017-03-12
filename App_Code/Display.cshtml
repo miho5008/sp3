@@ -3,11 +3,11 @@
     String regex_validsearch = "[0-9]+";
 
     // if valid search request was made
-    if(userid == null || 
+    if(String.IsNullOrWhiteSpace(userid) ||
         !System.Text.RegularExpressions.Regex.IsMatch(userid, regex_validsearch)){ 
             return;
     }
-            
+
     try{
         var db = Database.Open("sp3");
         //get the requested employee
