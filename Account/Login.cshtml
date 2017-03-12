@@ -38,6 +38,7 @@
 
             // Attempt to log in using provided credentials
             if (WebSecurity.Login(userid, password, rememberMe)) {
+                password = null;
                 // redirect to home page
                 Context.RedirectLocal("~/");
                 return;
